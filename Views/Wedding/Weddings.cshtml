@@ -1,0 +1,55 @@
+@model List<Wedding>
+
+<nav style="display: flex; align-items: center; width: 100%; justify-content: space-evenly; margin: 0 auto;">
+    <h4>Welcome @Context.Session.GetString("FirstName")</h4>
+    @{
+        if (Context.Session.GetInt32("UUID") != null)
+        {
+            <form asp-action="logout" asp-controller="Wedding" method="POST">
+                <button type="submit">Logout</button>
+            </form>
+        }
+    }
+    <a asp-action="AddWedding" asp-controller="Wedding">Add a Wedding</a>
+</nav>
+<table style="margin: 0 auto;">
+    <tr style="text-align: center;">
+        <th>Wedding Of</th>
+        <th>Date</th>
+        <th>Guest Count</th>
+        <th>Action</th>
+    </tr>
+    @foreach (Wedding wedding in Model)
+    {
+        bool alreadyRSVP = wedding.RSVPs.Any(r => r.UserId == Context.Session.GetInt32("UUID"));
+        <tr style="text-align: center;">
+            <td><a asp-action="ViewWedding" asp-controller="Wedding"
+                    asp-route-weddingId="@wedding.WeddingId">@wedding.WedderOne & @wedding.WedderTwo's Wedding</a></td>
+            <td>@wedding.DateOfWed</td>
+            <td>@wedding.RSVPs.Count</td>
+            @if (Context.Session.GetInt32("UUID") == wedding.UserId)
+            {
+                <td><form asp-action="Delete" asp-controller="Wedding" asp-route-weddingId="@wedding.WeddingId">
+                    <button type="Submit">Delete</button>
+                </form></td>
+            }
+            @if (Context.Session.GetInt32("UUID") != wedding.UserId)
+            {
+                <td>
+                    <form asp-action="RSVPTo" asp-controller="Wedding" asp-route-weddingId="@wedding.WeddingId" method="post">
+                        <button type="submit">
+                            @if (alreadyRSVP)
+                            {
+                                <span>Un-RSVP</span>
+                            }
+                            else
+                            {
+                                <span>RSVP</span>
+                            }
+                        </button>
+                    </form>
+                </td>
+            }
+        </tr>
+    }
+</table>

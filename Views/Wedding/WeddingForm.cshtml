@@ -1,0 +1,44 @@
+@model Wedding
+<nav style="display: flex; align-items: center; width: 100%; justify-content: space-evenly; margin: 0 auto;">
+    <h4>Welcome @Context.Session.GetString("FirstName")</h4>
+    @{
+        if (Context.Session.GetInt32("UUID") != null)
+        {
+            <form asp-action="logout" asp-controller="Wedding" method="POST">
+                <button type="submit">Logout</button>
+            </form>
+        }
+    }
+    <a>Add a Wedding</a>
+</nav>
+<h2 style="text-align: center;">Plan a Wedding</h2>
+
+<div style="text-align: left;">
+    <form asp-action="CreateWedding" asp-controller="Wedding" method="post" style="margin: 0 auto; width: 300px;">
+        <div >
+            <div style="display: flex; justify-content: space-between;">
+            <label asp-for="WedderOne"></label>
+            <span style="color: red;" asp-validation-for="WedderOne"></span>
+            <input asp-for="WedderOne">
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+            <label asp-for="WedderTwo"></label>
+            <span asp-validation-for="WedderTwo"></span>
+            <input asp-for="WedderTwo">
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+            <label asp-for="DateOfWed"></label>
+            <span asp-validation-for="DateOfWed"></span>
+            <input type="date" asp-for="DateOfWed">
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+            <label asp-for="Address"></label>
+            <span asp-validation-for="Address"></span>
+            <input asp-for="Address">
+            </div>
+            <span asp-validation-for="UserId"></span>
+            <input type="hidden" asp-for="UserId" value='@Context.Session.GetInt32("UUID")'>
+            <button type="submit">Create</button>
+        </div>
+    </form>
+</div>

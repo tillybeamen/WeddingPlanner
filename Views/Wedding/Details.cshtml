@@ -1,0 +1,23 @@
+@model Wedding
+<nav style="display: flex; align-items: center; width: 100%; justify-content: space-evenly; margin: 0 auto;">
+    <h4>Welcome @Context.Session.GetString("FirstName")</h4>
+    @{
+        if (Context.Session.GetInt32("UUID") != null)
+        {
+            <form asp-action="logout" asp-controller="Wedding" method="POST">
+                <button type="submit">Logout</button>
+            </form>
+        }
+    }
+    <a asp-action="AddWedding" asp-controller="Wedding">Add a Wedding</a>
+</nav>
+<div style="text-align: center">
+    <h1>@Model.WedderOne & @Model.WedderTwo's Wedding</h1>
+    <h4>@Model.DateOfWed</h4>
+    <h4>Guests:</h4>
+    <ul style="list-style: none;">
+    @foreach (RSVP reserve in Model.RSVPs)
+    {
+        <li value="@reserve.User?.FirstName">@reserve.User?.FirstName</li>
+    }</ul>
+</div>
